@@ -1,0 +1,11 @@
+services:
+  app:
+    image: quay.io/swpm/vmb:latest
+    container_name: vmb
+    ports:
+      - 8003:8003
+    volumes:
+      - data:/data/vmb
+
+volumes:
+  data:

@@ -1,0 +1,70 @@
+{% extends "vmb/master.html" %}
+
+{% block head-section %}
+    Project Overview
+{% endblock %}
+
+{% block head-section-sub %}
+    based on timecards
+{% endblock %}
+
+{% block content %}
+
+    <div class="col col-md-12">
+        <h2 class="text-center">Project Groups</h2>
+        <div class="py-2">
+            <table class="table table-striped">
+                {% for line in project_groups_list %}
+                <tr>
+                    <td><a href="{% url 'project_group_detail' line.id %}">{{ line.name }}</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="py-2">
+            <a href="{% url 'project_group_create' %}">create project group</a>
+        </div>
+    </div>
+
+{% endblock %}
+{% block row-1 %}
+
+    <div class="col col-md-12">
+    {% if hours_by_project %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Oracle ID</th>
+                    <th>Type</th>
+                    <th>Name</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Burned [h]</th>
+                    <th>Sold [h]</th>
+                    <th>Remaining [h]</th>
+                    <th>Burned [%]</th>
+                </tr>
+            </thead>
+            {% for line in hours_by_project %}
+            <tr>
+                <td><a href="{% url 'timecard-detail-by-project' line.project_id  %}">{{ line.project_id }}</a></td>
+                <td>{{ line.project.get_type_display }}</td>
+                <td>{{ line.project.name }}</td>
+                <td>{{ line.project.start_date }}</td>
+                <td>{{ line.project.end_date }} (<small>{{ line.days_left }}</small>)</td>
+                <td>{{ line.hours_sum|floatformat:2 }}</td>
+                <td>{{ line.project.sold_hours|floatformat:2 }}</td>
+                <td>{{ line.hours_left|floatformat:2 }}</td>
+                <td class="fw-light">{{ line.ratio|floatformat:2 }} </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No projects available.</p>
+    {% endif %}
+    </div>
+    <div class="py-2">
+        <a href="{% url 'project_create' %}">create project</a></a>
+    </div>
+
+{% endblock %}

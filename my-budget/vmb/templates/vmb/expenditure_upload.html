@@ -1,0 +1,15 @@
+{% extends "vmb/master.html" %}
+
+{% block head-section %}
+    upload expenditures
+{% endblock %}
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload</button>
+  </form>
+
+  <p><a href="{% url 'expenditure-documents' %}">Return to expenditure documents</a></p>
+{% endblock %}

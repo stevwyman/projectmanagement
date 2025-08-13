@@ -1,0 +1,132 @@
+{% extends "vmb/master.html" %}
+
+{% block head-section %}
+    {{ project.name }}
+{% endblock %}
+
+{% block head-section-sub %}
+    {{ target_month|date:"F Y" }}
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col col-md-5">
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="hours-tab" data-bs-toggle="tab" data-bs-target="#hours-tab-pane" href="#">Hours</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="hours-tab-pane">
+                    <div class="py-2">
+                        {% if hours_by_employee %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Task</th>
+                                    <th>Employee</th>
+                                    <th>Hours [h]</th>
+                                </tr>
+                            </thead>
+                            {% for line in hours_by_employee %}
+                            <tr>
+                                <td>{{ line.milestone__task }}</td>
+                                <td>{{ line.name }}</td>
+                                <td>{{ line.sum }}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td><strong>{{ sum_by_month.hours_sum }}</strong></td>
+                            </tr>
+                        </table>
+                    {% else %}
+                        <p>No result available.</p>
+                    {% endif %}
+                    </div>
+                    <div class="py-2">
+                        <a href="{% url 'timecard-detail-by-project' project.oracle_id  %}">to project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col col-md-7">
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="hours-milestone-tab" data-bs-toggle="tab" data-bs-target="#hours-milestone-tab-pane" href="#">Hours</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="burndown-tab" data-bs-toggle="tab" data-bs-target="#burndown-tab-pane" href="#">Chart</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="hours-milestone-tab-pane">
+                    <div class="py-2">
+                        <table class="table table-striped">
+                            <th>Team Name</th>
+                            {% for milestone in hours_by_and_milestone.0.sums %}
+                            <th class="text-end">{{ milestone.milestone.get_name_display }}</th>
+                            {% endfor %}
+                        {% for team_line in hours_by_and_milestone %}
+                            <tr>
+                                <td>{{ team_line.team.team }}</td>
+                                {% for sum in team_line.sums %}
+                                <td class="text-end">{{ sum.hours.sum|floatformat:2 }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade show" id="burndown-tab-pane">
+                    <div class="py-2">
+                        <div id="chartContainer">
+                            <img src="data:image/png;base64,{{ graphic|safe }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr class="hr hr-blurry" />
+<div class="row">
+    <div class="col col-md-12">
+        <section class="py-5 text-center container">
+            <h2>timecards</h2>
+        </section>
+        
+        <div>
+            <table class="table table-striped">
+                <tr>
+                    <th>Datum</th>
+                    <th>Name</th>
+                    <th>Milestone</th>
+                    <th>Hours</th>
+                    <th>Team</th>
+                    <th>Note</th>
+                </tr>
+                {% for timecard in timecards %}
+                <tr>
+                    <td class="text-nowrap">{{ timecard.start_date }}</td>
+                    <td class="text-nowrap">{{ timecard.name }}</td>
+                    <td class="text-nowrap">{{ timecard.milestone.task }}</td>
+                    <td>{{ timecard.total_hours }}</td>
+                    <td>{{ timecard.team }}</td>
+                    <td>{{ timecard.notes }}</td>
+                </tr>    
+            {% endfor%}
+            </table>
+        </div>
+        <div>
+            <a href="{% url 'report-timecards-month' project.oracle_id month %}">report timecards</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

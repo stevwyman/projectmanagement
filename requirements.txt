@@ -1,0 +1,4 @@
+django
+django-bootstrap5
+matplotlib
+pandas

@@ -1,0 +1,15 @@
+{% extends "vmb/master.html" %}
+
+{% block head-section %}
+    upload timecards
+{% endblock %}
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload</button>
+  </form>
+
+  <p><a href="{% url 'timecard-documents' %}">Return to timecard documents</a></p>
+{% endblock %}

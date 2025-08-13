@@ -1,0 +1,102 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  {% load django_bootstrap5 %}
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark text-info">
+  <div class="container-fluid">
+    
+    <a href="/vmb" alt="View My Budget" class=" navbar-brand">
+        <img src="{% static 'vmb/logo--on-dark.png' %}" alt="view my budget" height="36">
+    </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarScroll">
+          <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                        <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Expenditures
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="nav-item">
+                        <a class="dropdown-item" aria-current="page" href="/vmb/expenditure_overview">overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="dropdown-item" aria-current="page" href="/vmb/read_expenditures">import</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="dropdown-item" aria-current="page" href="/vmb/expenditure_documents">upload expenditures</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Timecards
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="nav-item">
+                        <a class="dropdown-item" aria-current="page" href="/vmb/timecard_overview">overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="dropdown-item" aria-current="page" href="/vmb/read_timecards">import</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="dropdown-item" aria-current="page" href="/vmb/timecard_documents">upload timecards</a>
+                    </li>
+                </ul>
+            </li>                          
+          </ul>
+      </div>
+  </div>
+</nav>
+
+{% bootstrap_messages %}
+
+<main>
+  <section class="py-5 text-center container">
+      <h1>
+          {% block head-section %}{% endblock %}
+      </h1>
+      <p class="h2 lead-text muted">
+          {% block head-section-sub %}{% endblock %}
+      </p>
+  </section>
+
+  <div class="container">
+    <div class="row py-1">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+    <div class="row py-1">
+        {% block row-1 %}
+
+        {% endblock %}
+    </div>
+</div>
+
+</main>
+
+<footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top"> 
+    <p class="text-body-secondary">© 2025 company</p> 
+    <ul class="nav justify-content-end"> 
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li> 
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li> 
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li> 
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li> 
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li> 
+    </ul> 
+</footer> 
+
+</body>
+</html>

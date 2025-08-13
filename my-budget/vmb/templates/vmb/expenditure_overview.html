@@ -1,0 +1,46 @@
+{% extends "vmb/master.html" %}
+
+{% block head-section %}
+    Project Overview
+{% endblock %}
+
+{% block head-section-sub %}
+    based on expenditures
+{% endblock %}
+
+{% block content %}
+{% if hours_by_project %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Oracle ID</th>
+                <th>Type</th>
+                <th>Name</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Burned [h]</th>
+                <th>Sold [h]</th>
+                <th>Remaining [h]</th>
+                <th>Burned [%]</th>
+            </tr>
+        </thead>
+        {% for line in hours_by_project %}
+        <tr>
+            <td><a href="{% url 'detail_by_project' line.project_id  %}">{{ line.project_id }}</a></td>
+            <td>{{ line.project.get_type_display }}</td>
+            <td>{{ line.project.name }}</td>
+            <td>{{ line.project.start_date }}</td>
+            <td>{{ line.project.end_date }} (<small>{{ line.days_left }}</small>)</td>
+            <td>{{ line.hours_sum|floatformat:2 }}</td>
+            <td>{{ line.project.sold_hours|floatformat:2 }}</td>
+            <td>{{ line.hours_left|floatformat:2 }}</td>
+            <td class="fw-light">{{ line.ratio|floatformat:2 }} </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No projects available.</p>
+{% endif %}
+<a href="{% url 'project_create' %}">create project</a>
+
+{% endblock %}

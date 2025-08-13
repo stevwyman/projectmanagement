@@ -1,0 +1,24 @@
+{% extends "vmb/master.html" %}
+
+{% block head-section %}
+    
+{% endblock %}
+
+{% block head-section-sub %}
+    
+{% endblock %}
+
+{% load django_bootstrap5 %}
+{% block content %}
+
+<div class="col col-md-8">
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input class="btn btn-outline-success float-end" type="submit" value="save">
+    </form>
+
+    <p><a href="{% url 'expenditure-documents' %}">Return to documents</a></p>
+</div>
+
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "vmb/master.html" %}
+
+{% block head-section %}
+    {{ project_group.name }}
+    <h3>
+        {% for project in project_list %}
+
+        {{ project.oracle_id }}
+
+    {% endfor %}
+    </h3>
+{% endblock %}
+
+{% block content %}
+    
+    <div class="col col-md-5">
+        {% if hours_by_month %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Hours [h]</th>
+                </tr>
+            </thead>
+            {% for line in hours_by_month %}
+            <tr>
+                <td><a href="{% url 'report_timecards_by_group_by_month' project_group.id line.month|date:'dMY'  %}">{{ line.month|date:"M Y" }}</a></td>
+                <td>{{ line.sum|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="fw-bolder">
+                <td>Sum</td>
+                <td>{{ hours_sum.sum|floatformat:2 }}</td>
+            </tr>
+        </table>
+        {% endif %}
+    </div>
+    <div class="col col-md-7">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="burndown-tab" data-bs-toggle="tab" data-bs-target="#burndown-tab-pane" href="#">Chart</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="hours-milestone-tab" data-bs-toggle="tab" data-bs-target="#hours-milestone-tab-pane" href="#">Hours</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+                <div class="tab-pane fade show active" id="burndown-tab-pane">
+                    <div class="py-2">
+                        <div id="chartContainer">
+                            <img src="data:image/png;base64,{{ graphic|safe }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade show" id="hours-milestone-tab-pane">
+                    <div class="py-2">
+                        <table class="table table-striped">
+                            <th>Team Name</th>
+                            {% for milestone in hours_by_team_and_milestone.0.sums %}
+                            <th class="text-end">{{ milestone.milestone.get_name_display }}</th>
+                            {% endfor %}
+                        {% for team_line in hours_by_team_and_milestone %}
+                            <tr>
+                                <td>{{ team_line.team.team }}</td>
+                                {% for sum in team_line.sums %}
+                                <td class="text-end">{{ sum.hours.sum|floatformat:2 }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+
+    <a href="{% url 'report_timecards_by_group' project_group.id %}">all timecards</a>
+
+    {% endblock %}

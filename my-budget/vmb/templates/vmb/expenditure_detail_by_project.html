@@ -1,0 +1,160 @@
+{% extends "vmb/master.html" %}
+
+{% block head-section %}
+    {{ project.name }}
+{% endblock %}
+
+{% block head-section-sub %}
+    {{ project.start_date }} - {{ project.end_date }}
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col col-md-5">
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="hours-tab" data-bs-toggle="tab" data-bs-target="#hours-tab-pane" href="#">Hours</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " id="milestones-tab" data-bs-toggle="tab" data-bs-target="#milestone-tab-pane" href="#">Milestones</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " id="project-tab" data-bs-toggle="tab" data-bs-target="#project-tab-pane" href="#">Project</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="hours-tab-pane">
+                    <div class="py-2">
+                        {% if hours_by_month %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Hours [h]</th>
+                                </tr>
+                            </thead>
+                            {% for line in hours_by_month %}
+                            <tr>
+                                <td><a href="{% url 'detail_by_project_month' project.oracle_id line.month|date:'dMY'  %}">{{ line.month|date:"M Y" }}</a></td>
+                                <td>{{ line.sum|floatformat:2 }}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr class="fw-bolder">
+                                <td>Sum</td>
+                                <td>{{ hours_sum.sum|floatformat:2 }}</td>
+                            </tr>
+                        </table>
+                        <p>Out of {{ project.sold_hours|floatformat:2 }} hours, {{ hours_sum.sum|floatformat:2 }} have been burned. Ideally {{ project.ideal_burn_by_month|floatformat:2 }} hours should be burned by month, in reality the average is {{ avg_burned|floatformat:2 }} hours by month.</p>
+                    </div>
+                    <div class="py-2">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Task</th>
+                                <th>Consumed [h]</th>
+                                <th>Budget [h]</th>
+                                <th>&delta; [h]</th>
+                            </tr>
+                            {% for line in sums_by_task %}
+                            <tr>
+                                <td>{{ line.task }}</td>
+                                <td>{{ line.sum.sum|floatformat:2 }}</td>
+                                <td>{{ line.milestone.sold_hours }}</td>
+                                <td>{{ line.delta }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                        {% else %}
+                            <p>No result available.</p>
+                        {% endif %}
+                    </div>                
+                </div>
+                <div class="tab-pane fade" id="milestone-tab-pane">
+                    <div class="py-2">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Task</th>
+                                <th>Name</th>
+                                <th>Sold Hours</th>
+                            </tr>
+                            {% for milestone in milestones %}
+                            <tr>
+                                <td>{{ milestone.task }}</td>
+                                <td>{{ milestone.get_name_display }}</td>
+                                <td>{{ milestone.sold_hours }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                        <a href="{% url 'milestone_create' project.oracle_id %}">add milestone</a> 
+                        <a href="{% url 'milestone_update' project.oracle_id %}">update milestone</a>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="project-tab-pane">
+                    <div class="py-2">
+                        <table class="table table-striped">
+                            <tr>
+                                <td>Oracle ID</td>
+                                <td>{{ project.oracle_id }}</td>
+                            </tr>
+                            <tr>
+                                <td>Name</td>
+                                <td>{{ project.name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Created</td>
+                                <td>{{ project.created }}</td>
+                            </tr>
+                            <tr>
+                                <td>Modified</td>
+                                <td>{{ project.modified }}</td>
+                            </tr>
+                            <tr>
+                                <td>Last Import</td>
+                                <td>{{ project.last_imported }}</td>
+                            </tr>
+                            <tr>
+                                <td>Sold Hours</td>
+                                <td>{{ project.sold_hours }}</td>
+                            </tr>
+                            <tr>
+                                <td>Start Date</td>
+                                <td>{{ project.start_date }}</td>
+                            </tr>
+                            <tr>
+                                <td>End Date</td>
+                                <td>{{ project.end_date }}</td>
+                            </tr>
+                            <tr>
+                                <td>Type</td>
+                                <td>{{ project.get_type_display }}</td>
+                            </tr>                            
+                        </table>
+                        <a href="{% url 'project_update' project.oracle_id %}">update project details</a> 
+                        <a href="{% url 'project_delete' project.oracle_id %}">delete project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col col-md-7">
+        <div>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" id="ta_link" data-bs-toggle="tab" data-bs-target="#hours-tab-pane" href="#">Chart</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="hours-tab-pane">
+                    <div class="py-2">
+                        <div id="chartContainer">
+                            <img src="data:image/png;base64,{{ graphic|safe }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

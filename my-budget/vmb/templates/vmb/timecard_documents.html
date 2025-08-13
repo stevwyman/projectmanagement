@@ -1,0 +1,24 @@
+{% extends "vmb/master.html" %}
+
+{% block head-section %}
+    timecard document management
+{% endblock %}
+
+{% block content %}
+  <ul>
+    <li>
+      <a href="{% url 'upload-timecards' %}">Upload</a>
+    </li>
+  </ul>
+
+  <p>Uploaded files:</p>
+  <ul>
+    {% for obj in documents %}
+      <li>
+        <a href="{{ obj.document.url }}">{{ obj.document.name }}</a>
+        <small>(Uploaded at: {{ obj.uploaded_at }})</small>
+      </li>
+    {% endfor %}
+  </ul>
+  <p><a href="{% url 'delete-timecard-documents' %}">Delete all documents</a></p>
+{% endblock %}
