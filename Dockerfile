@@ -42,4 +42,4 @@ ENTRYPOINT ["./docker-entrypoint.sh"]
 
 #USER app
 
-CMD ["./projectmanagement/manage.py", "runserver", "0.0.0.0:8003"]
+CMD ["./my-budget/manage.py", "runserver", "0.0.0.0:8003"]

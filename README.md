@@ -25,8 +25,8 @@ Then a consolidated view can be generated, that shows all expenditures that occu
 ### running local/locally
 
 ´´´sh
-source ../budget-env/bin/activate
-python projectmanagement/manage.py runserver
+source ../projectmanagement-env/bin/activate
+python my-budget/manage.py runserver
 ´´´´
 
 ### using podamn
@@ -39,22 +39,16 @@ podman compose --file docker-compose.yaml up --detach
 ## setting up the development environment
 
 ```python
-python3 manage.py makemigrations vmb
-python3 manage.py migrate
-python3 manage.py runserver
+python3 my-budget/manage.py makemigrations vmb
+python3 my-budget/manage.py migrate
+python3 my-budget/manage.py runserver
 ````
 
 The below is for creating a project from scratch
 
 ```python
 # setting up env
-python3 -m venv budget-env
-
-mkdir projectmanagement
-django-admin startproject budget projectmanagement
-cd projectmanagement
-python3 manage.py startapp vmb
-
-source ../../virtualenv/budget-env/bin/activate
-pip3 install -r ../requirements.txt
+python3 -m venv ../projectmanagement-env
+source ../projectmanagement-env/bin/activate
+pip3 install -r requirements.txt
 ````
