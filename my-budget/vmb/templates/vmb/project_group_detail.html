@@ -20,17 +20,20 @@
                 <tr>
                     <th>Month</th>
                     <th>Hours [h]</th>
+                    <th>download</th>
                 </tr>
             </thead>
             {% for line in hours_by_month %}
             <tr>
-                <td><a href="{% url 'report_timecards_by_group_by_month' project_group.id line.month|date:'dMY'  %}">{{ line.month|date:"M Y" }}</a></td>
+                <td>{{ line.month|date:"M Y" }}</td>
                 <td>{{ line.sum|floatformat:2 }}</td>
+                <td><a href="{% url 'report_timecards_by_group_by_month' project_group.id line.month|date:'dMY'  %}">link</a></td>
             </tr>
             {% endfor %}
             <tr class="fw-bolder">
                 <td>Sum</td>
                 <td>{{ hours_sum.sum|floatformat:2 }}</td>
+                <td><a href="{% url 'report_timecards_by_group' project_group.id %}">full report</a></td>
             </tr>
         </table>
         {% endif %}
@@ -57,7 +60,7 @@
                         <table class="table table-striped">
                             <th>Team Name</th>
                             {% for milestone in hours_by_team_and_milestone.0.sums %}
-                            <th class="text-end">{{ milestone.milestone.get_name_display }}</th>
+                            <th class="text-end">{{ milestone.milestone }}</th>
                             {% endfor %}
                         {% for team_line in hours_by_team_and_milestone %}
                             <tr>
@@ -72,8 +75,5 @@
                 </div>
             </div>
     </div>
-
-
-    <a href="{% url 'report_timecards_by_group' project_group.id %}">all timecards</a>
 
     {% endblock %}

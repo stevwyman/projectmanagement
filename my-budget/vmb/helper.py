@@ -208,6 +208,7 @@ def hours_by_month_by_project_group(project_group: Project_Group) -> dict:
 #
 
 def calculate_hours_by_month(reported_timecards: BaseManager[TimecardItems]):
+    '''returns total hours by month'''
     hours_by_month = (
         reported_timecards.annotate(month=TruncMonth("start_date"))
         .values("month")
@@ -216,6 +217,7 @@ def calculate_hours_by_month(reported_timecards: BaseManager[TimecardItems]):
     return hours_by_month
 
 def calculate_hours_sum(reported_timecards: BaseManager[TimecardItems]):
+    '''returns an aggregates sum of all hours provided in the reported timecards'''
     return reported_timecards.aggregate(sum=Sum("total_hours"))
 
 def calculate_hours_by_team_and_milestone(reported_timecards: BaseManager[TimecardItems]):
@@ -233,9 +235,20 @@ def calculate_hours_by_team_and_milestone(reported_timecards: BaseManager[Timeca
                 team=team_name, milestone=milestone_id)
             sum = hours_by_milestone_and_team.aggregate(sum=Sum("total_hours"))
 
-            sums_by_team_and_milestone.append(
-                {"milestone":milestone, "hours":sum}
-            )
+            updated = False
+            for milestone_entry in sums_by_team_and_milestone:
+                milestone_name = milestone_entry["milestone"]
+                if milestone_name == milestone.get_name_display():
+                    if milestone_entry["hours"]["sum"] != None and sum["sum"] != None:
+                        milestone_entry["hours"]["sum"] = milestone_entry["hours"]["sum"] + sum["sum"]
+                    elif milestone_entry["hours"]["sum"] == None and sum["sum"] != None:
+                        milestone_entry["hours"]["sum"] = sum["sum"]
+                    updated = True
+
+            if not updated:
+                sums_by_team_and_milestone.append(
+                    {"milestone":milestone.get_name_display(), "hours":sum}
+                )
         teams_lines.append(
             {"team": team_with_hours, "sums":sums_by_team_and_milestone}
         )
