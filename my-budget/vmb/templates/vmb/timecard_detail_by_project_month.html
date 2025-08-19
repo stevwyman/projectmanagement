@@ -70,7 +70,7 @@
                         <table class="table table-striped">
                             <th>Team Name</th>
                             {% for milestone in hours_by_and_milestone.0.sums %}
-                            <th class="text-end">{{ milestone.milestone.get_name_display }}</th>
+                            <th class="text-end">{{ milestone.milestone }}</th>
                             {% endfor %}
                         {% for team_line in hours_by_and_milestone %}
                             <tr>

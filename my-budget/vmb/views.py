@@ -646,7 +646,7 @@ def timecard_detail_by_project_month(request, project_id, month):
             sum = hours_by_milestone_and_team.aggregate(sum=Sum("total_hours"))
 
             sums_by_team_and_milestone.append(
-                {"milestone":milestone, "hours":sum}
+                {"milestone":milestone.get_name_display(), "hours":sum}
             )
         teams_lines.append(
             {"team": team_with_hours, "sums":sums_by_team_and_milestone}
