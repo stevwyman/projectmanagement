@@ -104,6 +104,7 @@
         <div>
             <table class="table table-striped">
                 <tr>
+                    <th>ID</th>
                     <th>Datum</th>
                     <th>Name</th>
                     <th>Milestone</th>
@@ -113,6 +114,7 @@
                 </tr>
                 {% for timecard in timecards %}
                 <tr>
+                    <td><a href="{% url 'timecarditem-update' timecard.timecard_id %}">{{ timecard.timecard_id }}</a></td>
                     <td class="text-nowrap">{{ timecard.start_date }}</td>
                     <td class="text-nowrap">{{ timecard.name }}</td>
                     <td class="text-nowrap">{{ timecard.milestone.task }}</td>

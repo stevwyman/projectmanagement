@@ -19,7 +19,8 @@ urlpatterns = [
     path("timecard_overview", views.timecard_overview, name="timecard-overview"),
     path("timecard_detail_by_project/<int:project_id>/", views.timecard_detail_by_project, name="timecard-detail-by-project"),
     path("timecard_detail_by_project_month/<int:project_id>/<str:month>/", views.timecard_detail_by_project_month, name="timecard-detail-by-project-month"),
-    
+    path("timecarditem_update/<pk>", views.TimecardItemUpdateView.as_view(), name="timecarditem-update"),
+
     path("expenditure_overview", views.expenditure_overview, name="expenditure-overview"),
     path("detail_by_project/<int:project_id>/", views.expenditure_detail_by_project, name="detail_by_project"),
     path("detail_by_project_month/<int:project_id>/<str:month>/", views.expenditure_detail_by_project_month, name="detail_by_project_month"),

@@ -784,3 +784,10 @@ class MilestoneUpdateView(UpdateView):
     fields = ["task", "name", "sold_hours"]
     template_name = "vmb/milestone_update.html"
     success_url = reverse_lazy("overview")
+
+
+class TimecardItemUpdateView(UpdateView):
+    model = TimecardItems
+    fields = ["name", "total_hours", "deliver_location", "team", "notes"]
+    template_name = "vmb/timecarditem_update.html"
+    success_url = reverse_lazy("overview")
