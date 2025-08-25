@@ -37,6 +37,25 @@
             </tr>
         </table>
         {% endif %}
+
+        <hr>
+
+        {% if milestone_sum %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Milestone</th>
+                    <th>Sum Hours [h]</th>
+                </tr>
+            </thead>
+            {% for name, sum in milestone_sum.items %}
+            <tr>
+                <td>{{ name }}</td>
+                <td>{{ sum }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
     </div>
     <div class="col col-md-7">
         <ul class="nav nav-tabs" role="tablist">

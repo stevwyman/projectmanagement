@@ -17,7 +17,7 @@ import os
 import pandas as pd
 import statistics
 
-from .helper import burndown, burndown_by_timecards, hours_by_month_by_project_group, calculate_hours_by_month, calculate_hours_sum, calculate_hours_by_team_and_milestone, calculate_hours_by_milestone
+from .helper import burndown, burndown_by_timecards, hours_by_month_by_project_group, calculate_hours_by_month, calculate_hours_sum, calculate_hours_by_team_and_milestone, calculate_hours_and_delta_by_milestone, calculate_hours_by_milestone
 from .models import ExpenditureItem, Project, Project_Group, ExpenditureDocument, Milestone, TimecardItems, TimecardDocument, TASK_TYPES
 from .forms import ExpenditureDocumentForm, ProjectForm, MilestoneForm, TimecardDocumentForm
 
@@ -592,7 +592,7 @@ def timecard_detail_by_project(request, project_id):
 
     teams_lines = calculate_hours_by_team_and_milestone(timecards)
 
-    sums_by_milestone = calculate_hours_by_milestone(timecards)
+    sums_by_milestone = calculate_hours_and_delta_by_milestone(timecards)
 
     milestones = project.milestone_set.filter()
     
@@ -719,6 +719,8 @@ def project_group_detail(request, project_group_id):
 
     graphic = hours_by_month_by_project_group(project_group)["image"]
 
+    milestone_sum = calculate_hours_by_milestone(reported_timecards)
+
     template = loader.get_template("vmb/project_group_detail.html")
     context = {
         "project_group": project_group,
@@ -726,7 +728,8 @@ def project_group_detail(request, project_group_id):
         "graphic": graphic,
         "hours_by_month": hours_by_month,
         "hours_sum": hours_sum,
-        "hours_by_team_and_milestone": team_lines
+        "hours_by_team_and_milestone": team_lines,
+        "milestone_sum": milestone_sum
     }
     return HttpResponse(template.render(context, request))
 
@@ -788,6 +791,6 @@ class MilestoneUpdateView(UpdateView):
 
 class TimecardItemUpdateView(UpdateView):
     model = TimecardItems
-    fields = ["name", "total_hours", "deliver_location", "team", "notes"]
+    fields = ["name", "project", "total_hours", "deliver_location", "team", "notes"]
     template_name = "vmb/timecarditem_update.html"
     success_url = reverse_lazy("overview")

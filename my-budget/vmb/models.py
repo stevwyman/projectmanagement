@@ -32,6 +32,9 @@ class Project_Group(models.Model):
 
     def get_projects(self):
         return self.project_set.all()
+    
+    def __str__(self):
+        return (f"{self.name}")
 
 
 class Project(models.Model):

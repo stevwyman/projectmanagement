@@ -258,6 +258,25 @@ def calculate_hours_by_team_and_milestone(reported_timecards: BaseManager[Timeca
 
 def calculate_hours_by_milestone(reported_timecards: BaseManager[TimecardItems]):
     milestones_with_hours = reported_timecards.values("milestone").distinct()
+
+    milestone_list = dict()
+    for milestone_with_hours in milestones_with_hours:
+            milestone_id = milestone_with_hours['milestone']
+            milestone = Milestone.objects.get(id=milestone_id)
+            hours_by_milestone_and_team = TimecardItems.objects.filter(
+                milestone=milestone_id)
+            sum = hours_by_milestone_and_team.aggregate(sum=Sum("total_hours"))
+
+            if milestone.get_name_display() not in milestone_list:
+                milestone_list[milestone.get_name_display()] = sum["sum"]
+            else :
+                cumulated = milestone_list[milestone.get_name_display()] + sum["sum"]
+                milestone_list.update({milestone.get_name_display(): cumulated})
+
+    return (milestone_list)
+
+def calculate_hours_and_delta_by_milestone(reported_timecards: BaseManager[TimecardItems]):
+    milestones_with_hours = reported_timecards.values("milestone").distinct()
     
     sums_by_milestone = []
     for milestone_with_hours in milestones_with_hours:
