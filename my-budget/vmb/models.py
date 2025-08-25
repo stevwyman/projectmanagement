@@ -108,7 +108,7 @@ class Milestone(models.Model):
 
     # combination of project and task must be unique
     def __str__(self):
-        return (f"{self.task}, {self.get_name_display()}")
+        return (f"{self.id}, {self.task}, {self.get_name_display()}")
 
 
 class TimecardItems(models.Model):
